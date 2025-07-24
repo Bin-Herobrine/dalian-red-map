@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>大连红色文化地图</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    #map { height: 100vh; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <script>
+    const map = L.map('map').setView([38.914, 121.614], 12); // 大连中心点
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    const locations = [
+      {
+        name: '旅顺口红色教育基地',
+        lat: 38.814,
+        lng: 121.264,
+        link: 'posts/lushun.html'
+      },
+      {
+        name: '中山路党史广场',
+        lat: 38.922,
+        lng: 121.640,
+        link: 'posts/zhongshanlu.html'
+      }
+      // 可继续添加更多点
+    ];
+
+    locations.forEach(loc => {
+      L.marker([loc.lat, loc.lng])
+        .addTo(map)
+        .bindPopup(loc.name)
+        .on('click', () => {
+          window.location.href = loc.link;
+        });
+    });
+  </script>
+</body>
+</html>
