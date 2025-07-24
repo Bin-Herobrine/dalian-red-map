@@ -13,8 +13,8 @@
       height: 100%;
     }
     #map {
-      height: 100vh;
-      width: 100vw;
+      width: 100%;
+      height: 100%;
     }
   </style>
 </head>
@@ -23,30 +23,28 @@
   <div id="map"></div>
 
   <script>
-    const bounds = [[0, 0], [1048, 1740]];  // 图片的像素边界（y, x）
+    const bounds = [[0, 0], [1048, 1740]]; // 高度是 y，宽度是 x
 
     const map = L.map('map', {
       crs: L.CRS.Simple,
       minZoom: -1,
-      maxZoom: 2,
-      zoomControl: true
+      maxZoom: 2
     });
 
-    // ✅ 用你本地图片替代在线地图
-    const image = L.imageOverlay('img/dalian-map.jpg', bounds).addTo(map);
+    L.imageOverlay('img/dalian-map.jpg', bounds).addTo(map);
     map.fitBounds(bounds);
 
     const locations = [
       {
         name: '旅顺口红色教育基地',
-        lat: 950,
-        lng: 150,
+        lat: 930,  // 越往下 y 越大
+        lng: 160,  // 越往右 x 越大
         link: 'posts/lushun.html'
       },
       {
         name: '中山路党史广场',
-        lat: 870,
-        lng: 680,
+        lat: 790,
+        lng: 710,
         link: 'posts/zhongshanlu.html'
       }
     ];
