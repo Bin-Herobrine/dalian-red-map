@@ -1,13 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   <title>大连红色文化地图</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- 引入 Leaflet 样式和脚本 -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
   <style>
-    #map { height: 100vh; }
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    #map {
+      height: 100vh;
+      width: 100vw;
+    }
   </style>
 </head>
 <body>
@@ -15,17 +25,36 @@
   <div id="map"></div>
 
   <script>
+    // 设置图片边界（高度: 1048, 宽度: 1740）
     const bounds = [[0, 0], [1048, 1740]];
+
+    // 初始化 Leaflet 地图，使用像素坐标系
     const map = L.map('map', {
       crs: L.CRS.Simple,
-      minZoom: -1
+      minZoom: -1,
+      maxZoom: 2,
+      zoomControl: true
     });
+
+    // 替换为你图片实际路径
     L.imageOverlay('img/dalian-map.jpg', bounds).addTo(map);
     map.fitBounds(bounds);
 
+    // 添加红色文化地点标记
     const locations = [
-      { name: '旅顺口红色教育基地', lat: 950, lng: 150, link: 'posts/lushun.html' },
-      { name: '中山路党史广场', lat: 870, lng: 680, link: 'posts/zhongshanlu.html' }
+      {
+        name: '旅顺口红色教育基地',
+        lat: 950,
+        lng: 150,
+        link: 'posts/lushun.html'
+      },
+      {
+        name: '中山路党史广场',
+        lat: 870,
+        lng: 680,
+        link: 'posts/zhongshanlu.html'
+      }
+      // 👉 可在此继续添加更多点
     ];
 
     locations.forEach(loc => {
