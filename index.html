@@ -2,15 +2,15 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>大连红色文化地图</title>
+  <title>大连红色文化地图23:30</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
     html, body {
+      height: 100%;
       margin: 0;
       padding: 0;
-      height: 100%;
     }
     #map {
       width: 100%;
@@ -20,42 +20,49 @@
 </head>
 <body>
 
-  <div id="map"></div>
+<div id="map"></div>
 
-  <script>
-    const bounds = [[0, 0], [1048, 1740]]; // 高度是 y，宽度是 x
+<script>
+  // 设定图片原始像素尺寸：高 1048px，宽 1740px
+  const imageWidth = 1740;
+  const imageHeight = 1048;
 
-    const map = L.map('map', {
-      crs: L.CRS.Simple,
-      minZoom: -1,
-      maxZoom: 2
-    });
+  const bounds = [[0, 0], [imageHeight, imageWidth]];
 
-    L.imageOverlay('img/dalian-map.jpg', bounds).addTo(map);
-    map.fitBounds(bounds);
+  const map = L.map('map', {
+    crs: L.CRS.Simple,
+    minZoom: -1,
+    maxZoom: 3,
+    zoomSnap: 0.1
+  });
 
-    const locations = [
-      {
-        name: '旅顺口红色教育基地',
-        lat: 930,  // 越往下 y 越大
-        lng: 160,  // 越往右 x 越大
-        link: 'posts/lushun.html'
-      },
-      {
-        name: '中山路党史广场',
-        lat: 790,
-        lng: 710,
-        link: 'posts/zhongshanlu.html'
-      }
-    ];
+  // 加载地图背景图
+  L.imageOverlay('img/dalian-map.jpg', bounds).addTo(map);
+  map.fitBounds(bounds);
 
-    locations.forEach(loc => {
-      L.marker([loc.lat, loc.lng])
-        .addTo(map)
-        .bindPopup(loc.name)
-        .on('click', () => window.location.href = loc.link);
-    });
-  </script>
+  // 手动标注：注意 lat 是 y（从上往下），lng 是 x（从左往右）
+  const locations = [
+    {
+      name: '旅顺口红色教育基地',
+      lat: 970,  // 底部偏下
+      lng: 180,
+      link: 'posts/lushun.html'
+    },
+    {
+      name: '中山路党史广场',
+      lat: 880,
+      lng: 750,
+      link: 'posts/zhongshanlu.html'
+    }
+  ];
+
+  locations.forEach(loc => {
+    L.marker([loc.lat, loc.lng])
+      .addTo(map)
+      .bindPopup(loc.name)
+      .on('click', () => window.location.href = loc.link);
+  });
+</script>
 
 </body>
 </html>
