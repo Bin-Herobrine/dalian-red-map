@@ -2,10 +2,13 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>大连红色文化地图23:30</title>
+  <title>大连红色文化地图 23:35</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Leaflet 样式和脚本 -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
   <style>
     html, body {
       height: 100%;
@@ -15,6 +18,7 @@
     #map {
       width: 100%;
       height: 100%;
+      background-color: #000; /* 避免加载前出现灰色 */
     }
   </style>
 </head>
@@ -23,28 +27,29 @@
 <div id="map"></div>
 
 <script>
-  // 设定图片原始像素尺寸：高 1048px，宽 1740px
-  const imageWidth = 1740;
-  const imageHeight = 1048;
-
-  const bounds = [[0, 0], [imageHeight, imageWidth]];
+  // 地图图片尺寸（像素）：高度1048，宽度1740
+  const bounds = [[0, 0], [1048, 1740]];
 
   const map = L.map('map', {
     crs: L.CRS.Simple,
     minZoom: -1,
     maxZoom: 3,
-    zoomSnap: 0.1
+    zoomSnap: 0.1,
+    maxBounds: bounds,
+    maxBoundsViscosity: 1.0
   });
 
-  // 加载地图背景图
+  // 添加地图图片
   L.imageOverlay('img/dalian-map.jpg', bounds).addTo(map);
-  map.fitBounds(bounds);
 
-  // 手动标注：注意 lat 是 y（从上往下），lng 是 x（从左往右）
+  // 初始视角：局部放大视图（可修改）
+  map.setView([700, 800], 1); // y=700, x=800, 缩放=1
+
+  // 地点标记（像素坐标，lat=y方向从上到下，lng=x方向从左到右）
   const locations = [
     {
       name: '旅顺口红色教育基地',
-      lat: 970,  // 底部偏下
+      lat: 930,
       lng: 180,
       link: 'posts/lushun.html'
     },
@@ -54,8 +59,10 @@
       lng: 750,
       link: 'posts/zhongshanlu.html'
     }
+    // 可继续添加更多地点
   ];
 
+  // 添加标记并设置点击跳转
   locations.forEach(loc => {
     L.marker([loc.lat, loc.lng])
       .addTo(map)
