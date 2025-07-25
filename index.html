@@ -70,7 +70,9 @@
     L.marker([loc.lat, loc.lng], { icon: redIcon })
       .addTo(map)
       .bindPopup(loc.name)
+      .bindTooltip(loc.name, { permanent: false, direction: 'top' })
       .on('click', () => window.location.href = loc.link);
+
   });
 </script>
 
