@@ -2,11 +2,12 @@
 body {
   font-family: "Helvetica Neue", sans-serif;
   margin: 0;
-  padding: 0;
+  padding: 2em 1em;
   line-height: 1.6;
   background: linear-gradient(to right, #e6e6e6 0%, #ffffff 20%, #ffffff 80%, #e6e6e6 100%);
   color: #333;
 }
+
 
 
 h1 {
