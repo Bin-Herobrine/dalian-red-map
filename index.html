@@ -15,6 +15,7 @@
       align-items: center;
       height: 100vh;
       color: #333;
+      overflow: hidden; /* 防止吉祥物超出屏幕时出现滚动条 */
     }
 
     h1 {
@@ -44,6 +45,25 @@
     button:hover {
       background-color: #8b0000;
     }
+
+    /* 🎉 吉祥物样式 */
+    .mascot {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 80px;
+      height: auto;
+      z-index: 999;
+      cursor: pointer;
+      animation: floaty 3s ease-in-out infinite;
+    }
+
+    /* ✨ 动画：上下浮动 */
+    @keyframes floaty {
+      0%   { transform: translateY(0); }
+      50%  { transform: translateY(-10px); }
+      100% { transform: translateY(0); }
+    }
   </style>
 </head>
 <body>
@@ -54,6 +74,8 @@
   </p>
   <button onclick="window.location.href='map.html'">进入地图</button>
 
+  <!-- 🐱 吉祥物 -->
+  <img src="img/mascot.png" alt="吉祥物" class="mascot" title="点击我可以进入地图哦！" onclick="window.location.href='map.html'">
 
 </body>
 </html>
