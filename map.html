@@ -1,138 +1,160 @@
+
 <!DOCTYPE html>
-<html lang="zh">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>大连红色文化地图 - 导览页</title>
+  <meta charset="utf-8" />
+  <title>大连红色文化地图</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Leaflet 样式和脚本 -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="icon" type="image/png" href="img/favicon.png">
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
   <style>
-    body {
+    html, body {
+      height: 100%;
       margin: 0;
       padding: 0;
-      font-family: "Helvetica Neue", sans-serif;
-      background: linear-gradient(to bottom right, #ffcccc, #ffe4e1);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      color: #333;
     }
-
-    h1 {
-      color: #b22222;
-      font-size: 2.5em;
-    }
-
-    p {
-      max-width: 600px;
-      text-align: center;
-      font-size: 1.2em;
-      line-height: 1.8;
-    }
-
-    button {
-      margin-top: 2em;
-      padding: 1em 2em;
-      font-size: 1.2em;
-      background-color: #b22222;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    button:hover {
-      background-color: #8b0000;
-    }
-
-    /* 吉祥物样式 */
-    #mascot {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 100px;
-      cursor: pointer;
-      z-index: 1000;
-    }
-
-    /* 弹窗样式 */
-    #teamModal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
+    #map {
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      z-index: 1001;
-      justify-content: center;
-      align-items: center;
-    }
-
-    #teamModal .content {
-      background: white;
-      padding: 2em;
-      max-width: 600px;
-      border-radius: 10px;
-      position: relative;
-    }
-
-    #teamModal .close {
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      cursor: pointer;
-      font-size: 20px;
-    }
-
-    #teamModal h2 {
-      color: #b22222;
     }
   </style>
 </head>
 <body>
 
-  <h1>欢迎来到大连红色文化地图</h1>
-  <p>
-    本项目是一次大学生社会实践成果展示，通过互动地图的形式标注并介绍大连重要的红色文化地标。点击下方按钮开始探索红色历史！
-  </p>
-  <button onclick="window.location.href='map.html'">进入地图</button>
+<div id="map"></div>
 
-  <!-- 吉祥物图片 -->
-  <img id="mascot" src="img/mascot.png" alt="吉祥物">
+<script>
+  const bounds = [[0, 0], [1048, 1740]];
 
-  <!-- 弹窗内容 -->
-  <div id="teamModal">
-    <div class="content">
-      <span class="close" id="closeModal">✖</span>
-      <h2>关于我们</h2>
-      <p>
-        我们是北京科技大学社会实践团队，成员来自不同学院与专业，涵盖文案撰写、影像记录、程序开发等多元能力。
-        秉持“溯源工运红脉，赓续红色薪火”初心，聚焦辽宁奋斗故事与红色记忆，将以实地调研、访谈、创意实践等方式，
-        挖掘红色资源，传承红色基因，让红色文化“活”在当下，期待与您共探红色历史，传递奋斗力量！
-      </p>
-    </div>
-  </div>
+const map = L.map('map', {
+  crs: L.CRS.Simple,
+  minZoom: -2,
+  maxZoom: 3,
+  zoomSnap: 0.1,
+  maxBounds: bounds,
+  maxBoundsViscosity: 1.0
+});
 
-  <script>
-    const mascot = document.getElementById('mascot');
-    const modal = document.getElementById('teamModal');
-    const closeBtn = document.getElementById('closeModal');
+L.imageOverlay('img/dalian-map.jpg', bounds).addTo(map);
 
-    mascot.addEventListener('click', () => {
-      modal.style.display = 'flex';
-    });
+// ✅ 设置初始视角为图片中间
+map.setView([384, 638], 0);
 
-    closeBtn.addEventListener('click', () => {
-      modal.style.display = 'none';
-    });
+// ✅ 设置红色图标
+const redIcon = L.icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+  shadowSize: [41, 41]
+});
 
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        modal.style.display = 'none';
-      }
-    });
-  </script>
+// ✅ 添加标记
+const locations = [
+  {
+    name: '大连金石滩毛泽东历史珍藏馆',
+    lat: 330,
+    lng: 783,
+    link: 'posts/maozedong.html'
+  },
+  {
+    name: '大连博物馆',
+    lat: 153,
+    lng: 483,
+    link: 'posts/museum.html'
+  },
+  {
+    name: '东关街历史文化街区',
+    lat: 188,
+    lng: 526,
+    link: 'posts/dongguan.html'
+  },
+  {
+    name: '关向应故居纪念馆',
+    lat: 425,
+    lng: 686,
+    link: 'posts/gujv.html'
+  },
+  {
+    name: '中华工学会旧址纪念馆',
+    lat: 185,
+    lng: 540,
+    link: 'posts/gongxue.html'
+  },
+  {
+    name: '旅顺日俄监狱旧址博物馆',
+    lat: 103,
+    lng: 278,
+    link: 'posts/prison.html'
+  },
+  {
+    name: '大连东鸡冠山景区',
+    lat: 110,
+    lng: 294,
+    link: 'posts/jiguan.html'
+  },
+  {
+    name: '徐海东旧居',
+    lat: 186,
+    lng: 522,
+    link: 'posts/haidong.html'
+  },
+  {
+    name: '董秋农故居',
+    lat: 409,
+    lng: 625,
+    link: 'posts/qiunong.html'
+  },
+  {
+    name: '大连苏军烈士陵园',
+    lat: 132,
+    lng: 269,
+    link: 'posts/tumb.html'
+  },
+  {
+    name: '大连市烈士陵园',
+    lat: 113,
+    lng: 364,
+    link: 'posts/lieshi.html'
+  },
+  {
+    name: '中苏友谊纪念塔',
+    lat: 89,
+    lng: 258,
+    link: 'posts/tower.html'
+  },
+  {
+    name: '大连福岛纺织株式会社旧址',
+    lat: 218,
+    lng: 491,
+    link: 'posts/company.html'
+  },
+  {
+    name: '大魏家后石村·福清公园',
+    lat: 413,
+    lng: 577,
+    link: 'posts/houshi.html'
+  }
+
+  
+];
+
+locations.forEach(loc => {
+  L.marker([loc.lat, loc.lng], { icon: redIcon })
+    .addTo(map)
+    .bindPopup(loc.name)
+    .bindTooltip(loc.name, { permanent: false, direction: 'top' })
+    .on('click', () => window.location.href = loc.link);
+});
+// ✅ 添加其他标记
+</script>
+
 
 </body>
 </html>

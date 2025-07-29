@@ -15,7 +15,6 @@
       align-items: center;
       height: 100vh;
       color: #333;
-      overflow: hidden; /* 防止吉祥物超出屏幕时出现滚动条 */
     }
 
     h1 {
@@ -46,23 +45,48 @@
       background-color: #8b0000;
     }
 
-    /* 🎉 吉祥物样式 */
-    .mascot {
+    /* 吉祥物样式 */
+    #mascot {
       position: fixed;
       bottom: 20px;
       right: 20px;
-      width: 80px;
-      height: auto;
-      z-index: 999;
+      width: 100px;
       cursor: pointer;
-      animation: floaty 3s ease-in-out infinite;
+      z-index: 1000;
     }
 
-    /* ✨ 动画：上下浮动 */
-    @keyframes floaty {
-      0%   { transform: translateY(0); }
-      50%  { transform: translateY(-10px); }
-      100% { transform: translateY(0); }
+    /* 弹窗样式 */
+    #teamModal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 1001;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #teamModal .content {
+      background: white;
+      padding: 2em;
+      max-width: 600px;
+      border-radius: 10px;
+      position: relative;
+    }
+
+    #teamModal .close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    #teamModal h2 {
+      color: #b22222;
     }
   </style>
 </head>
@@ -74,8 +98,41 @@
   </p>
   <button onclick="window.location.href='map.html'">进入地图</button>
 
-  <!-- 🐱 吉祥物 -->
-  <img src="img/mascot.png" alt="吉祥物" class="mascot" title="点击我可以进入地图哦！" onclick="window.location.href='map.html'">
+  <!-- 吉祥物图片 -->
+  <img id="mascot" src="img/mascot.png" alt="吉祥物">
+
+  <!-- 弹窗内容 -->
+  <div id="teamModal">
+    <div class="content">
+      <span class="close" id="closeModal">✖</span>
+      <h2>关于我们</h2>
+      <p>
+        我们是北京科技大学社会实践团队，成员来自不同学院与专业，涵盖文案撰写、影像记录、程序开发等多元能力。
+        秉持“溯源工运红脉，赓续红色薪火”初心，聚焦辽宁奋斗故事与红色记忆，将以实地调研、访谈、创意实践等方式，
+        挖掘红色资源，传承红色基因，让红色文化“活”在当下，期待与您共探红色历史，传递奋斗力量！
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const mascot = document.getElementById('mascot');
+    const modal = document.getElementById('teamModal');
+    const closeBtn = document.getElementById('closeModal');
+
+    mascot.addEventListener('click', () => {
+      modal.style.display = 'flex';
+    });
+
+    closeBtn.addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+  </script>
 
 </body>
 </html>
