@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,7 +8,6 @@
   <!-- Leaflet 样式和脚本 -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="icon" type="image/png" href="img/favicon.png">
-
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <style>
@@ -22,139 +20,156 @@
       width: 100%;
       height: 100%;
     }
+
+    /* ✅ 吉祥物按钮 */
+    #mascot {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      width: 80px;
+      height: 80px;
+      cursor: pointer;
+      z-index: 1000;
+    }
+
+    #mascot img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      transition: transform 0.3s;
+    }
+
+    #mascot img:hover {
+      transform: scale(1.1);
+    }
+
+    /* ✅ 弹窗 */
+    #map-instruction {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #map-instruction .content {
+      background: #fff;
+      padding: 2em;
+      border-radius: 12px;
+      max-width: 500px;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    #map-instruction button {
+      margin-top: 1em;
+      padding: 0.5em 1.5em;
+      background: #b22222;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    #map-instruction button:hover {
+      background: #8b0000;
+    }
   </style>
 </head>
 <body>
 
 <div id="map"></div>
 
+<!-- ✅ 吉祥物 -->
+<div id="mascot">
+  <img src="logo.png" alt="吉祥物">
+</div>
+
+<!-- ✅ 使用说明弹窗 -->
+<div id="map-instruction">
+  <div class="content">
+    <h2>地图使用说明</h2>
+    <p>
+      1. 点击地图上的红色标记，可以查看对应的红色文化地标介绍。<br>
+      2. 鼠标悬停在标记上时，会显示地点名称。<br>
+      3. 通过缩放和拖动地图，探索更多大连红色文化地点。<br>
+      4. 点击右下角的吉祥物，可以随时再次查看本说明。
+    </p>
+    <button onclick="closeInstruction()">关闭</button>
+  </div>
+</div>
+
 <script>
   const bounds = [[0, 0], [1048, 1740]];
 
-const map = L.map('map', {
-  crs: L.CRS.Simple,
-  minZoom: -2,
-  maxZoom: 3,
-  zoomSnap: 0.1,
-  maxBounds: bounds,
-  maxBoundsViscosity: 1.0
-});
+  const map = L.map('map', {
+    crs: L.CRS.Simple,
+    minZoom: -2,
+    maxZoom: 3,
+    zoomSnap: 0.1,
+    maxBounds: bounds,
+    maxBoundsViscosity: 1.0
+  });
 
-L.imageOverlay('img/dalian-map.jpg', bounds).addTo(map);
+  L.imageOverlay('img/dalian-map.jpg', bounds).addTo(map);
 
-// ✅ 设置初始视角为图片中间
-map.setView([384, 638], 0);
+  // ✅ 设置初始视角为图片中间
+  map.setView([384, 638], 0);
 
-// ✅ 设置红色图标
-const redIcon = L.icon({
-  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-  shadowSize: [41, 41]
-});
+  // ✅ 红色图标
+  const redIcon = L.icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+    shadowSize: [41, 41]
+  });
 
-// ✅ 添加标记
-const locations = [
-  {
-    name: '大连金石滩毛泽东历史珍藏馆',
-    lat: 330,
-    lng: 783,
-    link: 'posts/maozedong.html'
-  },
-  {
-    name: '大连博物馆',
-    lat: 153,
-    lng: 483,
-    link: 'posts/museum.html'
-  },
-  {
-    name: '东关街历史文化街区',
-    lat: 188,
-    lng: 526,
-    link: 'posts/dongguan.html'
-  },
-  {
-    name: '关向应故居纪念馆',
-    lat: 425,
-    lng: 686,
-    link: 'posts/gujv.html'
-  },
-  {
-    name: '中华工学会旧址纪念馆',
-    lat: 185,
-    lng: 540,
-    link: 'posts/gongxue.html'
-  },
-  {
-    name: '旅顺日俄监狱旧址博物馆',
-    lat: 103,
-    lng: 278,
-    link: 'posts/prison.html'
-  },
-  {
-    name: '大连东鸡冠山景区',
-    lat: 110,
-    lng: 294,
-    link: 'posts/jiguan.html'
-  },
-  {
-    name: '徐海东旧居',
-    lat: 186,
-    lng: 522,
-    link: 'posts/haidong.html'
-  },
-  {
-    name: '董秋农故居',
-    lat: 409,
-    lng: 625,
-    link: 'posts/qiunong.html'
-  },
-  {
-    name: '大连苏军烈士陵园',
-    lat: 132,
-    lng: 269,
-    link: 'posts/tumb.html'
-  },
-  {
-    name: '大连市烈士陵园',
-    lat: 113,
-    lng: 364,
-    link: 'posts/lieshi.html'
-  },
-  {
-    name: '中苏友谊纪念塔',
-    lat: 89,
-    lng: 258,
-    link: 'posts/tower.html'
-  },
-  {
-    name: '大连福岛纺织株式会社旧址',
-    lat: 218,
-    lng: 491,
-    link: 'posts/company.html'
-  },
-  {
-    name: '大魏家后石村·福清公园',
-    lat: 413,
-    lng: 577,
-    link: 'posts/houshi.html'
+  // ✅ 标记数组
+  const locations = [
+    { name: '大连金石滩毛泽东历史珍藏馆', lat: 330, lng: 783, link: 'posts/maozedong.html' },
+    { name: '大连博物馆', lat: 153, lng: 483, link: 'posts/museum.html' },
+    { name: '东关街历史文化街区', lat: 188, lng: 526, link: 'posts/dongguan.html' },
+    { name: '关向应故居纪念馆', lat: 425, lng: 686, link: 'posts/gujv.html' },
+    { name: '中华工学会旧址纪念馆', lat: 185, lng: 540, link: 'posts/gongxue.html' },
+    { name: '旅顺日俄监狱旧址博物馆', lat: 103, lng: 278, link: 'posts/prison.html' },
+    { name: '大连东鸡冠山景区', lat: 110, lng: 294, link: 'posts/jiguan.html' },
+    { name: '徐海东旧居', lat: 186, lng: 522, link: 'posts/haidong.html' },
+    { name: '董秋农故居', lat: 409, lng: 625, link: 'posts/qiunong.html' },
+    { name: '大连苏军烈士陵园', lat: 132, lng: 269, link: 'posts/tumb.html' },
+    { name: '大连市烈士陵园', lat: 113, lng: 364, link: 'posts/lieshi.html' },
+    { name: '中苏友谊纪念塔', lat: 89, lng: 258, link: 'posts/tower.html' },
+    { name: '大连福岛纺织株式会社旧址', lat: 218, lng: 491, link: 'posts/company.html' },
+    { name: '大魏家后石村·福清公园', lat: 413, lng: 577, link: 'posts/houshi.html' }
+  ];
+
+  // ✅ 循环添加标记
+  locations.forEach(loc => {
+    L.marker([loc.lat, loc.lng], { icon: redIcon })
+      .addTo(map)
+      .bindPopup(loc.name)
+      .bindTooltip(loc.name, { permanent: false, direction: 'top' })
+      .on('click', () => window.location.href = loc.link);
+  });
+
+  // ✅ 吉祥物弹窗逻辑
+  const mascot = document.getElementById("mascot");
+  const instruction = document.getElementById("map-instruction");
+
+  mascot.addEventListener("click", () => {
+    instruction.style.display = "flex";
+  });
+
+  function closeInstruction() {
+    instruction.style.display = "none";
   }
-
-  
-];
-
-locations.forEach(loc => {
-  L.marker([loc.lat, loc.lng], { icon: redIcon })
-    .addTo(map)
-    .bindPopup(loc.name)
-    .bindTooltip(loc.name, { permanent: false, direction: 'top' })
-    .on('click', () => window.location.href = loc.link);
-});
-// ✅ 添加其他标记
 </script>
-
-
 </body>
 </html>

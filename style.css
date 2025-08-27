@@ -35,3 +35,47 @@ a:hover {
   margin: 0 auto;
   padding: 2em;
 }
+
+/* 吉祥物按钮 */
+#mascot {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  width: 80px;
+  height: 80px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+#mascot img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  transition: transform 0.3s;
+}
+
+#mascot img:hover {
+  transform: scale(1.1);
+}
+
+/* 弹窗 */
+#map-instruction {
+  display: none; /* 默认隐藏 */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  z-index: 2000;
+  justify-content: center;
+  align-items: center;
+}
+
+#map-instruction .content {
+  background: #fff;
+  padding: 2em;
+  border-radius: 12px;
+  max-width: 500px;
+  text-align: center;
+}
